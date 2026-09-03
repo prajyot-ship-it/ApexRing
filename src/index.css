@@ -1,33 +1,34 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    --bg: #17191a;
-    --bg2: #1d201d;
-    --panel: #20231f;
-    --paper: #ece6d6;
-    --paper-dim: #dcd5c0;
-    --ink: #f3efe4;
-    --ink-dim: #9a9d8f;
-    --amber: #e7a335;
-    --amber-deep: #b97a20;
-    --red: #d6553c;
-    --line: rgba(243, 239, 228, 0.13);
-    --line-strong: rgba(243, 239, 228, 0.22);
-    --font-mono: 'IBM Plex Mono', monospace;
-    --font-display: 'Barlow Condensed', sans-serif;
-    --font-body: 'Inter', sans-serif;
-  }
+:root {
+  --bg: #17191a;
+  --bg2: #1d201d;
+  --panel: #20231f;
+  --paper: #ece6d6;
+  --paper-dim: #dcd5c0;
+  --ink: #f3efe4;
+  --ink-dim: #9a9d8f;
+  --amber: #e7a335;
+  --amber-deep: #b97a20;
+  --red: #d6553c;
+  --line: rgba(243, 239, 228, 0.13);
+  --line-strong: rgba(243, 239, 228, 0.22);
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
 
-  html {
-    scroll-behavior: smooth;
-  }
+html {
+  scroll-behavior: smooth;
+}
 
-  body {
-    font-family: var(--font-body);
-    background-color: var(--bg);
-    color: var(--ink);
-  }
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--ink);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
 .font-display {
