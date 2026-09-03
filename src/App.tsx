@@ -9,6 +9,7 @@ import { Hero } from './components/Hero';
 import { ProblemSection } from './components/ProblemSection';
 import { SequencePreview } from './components/SequencePreview';
 import { HowItWorks } from './components/HowItWorks';
+import { TestimonialsCarousel } from './components/TestimonialsCarousel';
 import { PricingSection } from './components/PricingSection';
 import { GuaranteeBand } from './components/GuaranteeBand';
 import { ScenarioSection } from './components/ScenarioSection';
@@ -59,6 +60,7 @@ export default function App() {
         <ProblemSection />
         <SequencePreview />
         <HowItWorks />
+        <TestimonialsCarousel onOpenAuditModal={handleOpenAuditModal} />
         <PricingSection onSelectPlan={handleSelectPlan} />
         <GuaranteeBand />
         <ScenarioSection />

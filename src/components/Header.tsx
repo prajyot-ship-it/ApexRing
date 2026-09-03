@@ -51,6 +51,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuditModal }) => {
           <a href="#how" className="hover:text-[#F3EFE4] transition-colors">
             How It Works
           </a>
+          <a href="#testimonials" className="hover:text-[#F3EFE4] transition-colors flex items-center gap-1.5">
+            <span>Reviews</span>
+            <span className="text-[10px] bg-[#E7A335]/20 text-[#E7A335] px-1.5 py-0.2 border border-[#E7A335]/30">4.9★</span>
+          </a>
           <a href="#pricing" className="hover:text-[#F3EFE4] transition-colors">
             Pricing
           </a>
@@ -107,6 +111,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuditModal }) => {
               className="py-1 hover:text-[#F3EFE4]"
             >
               • How Setup Works
+            </a>
+            <a
+              href="#testimonials"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 text-[#E7A335] hover:text-[#F0B355]"
+            >
+              • Contractor Reviews (4.9★)
             </a>
             <a
               href="#pricing"

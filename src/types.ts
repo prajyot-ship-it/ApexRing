@@ -52,3 +52,25 @@ export interface WorkedScenario {
   estMonthlyRecovery: string;
   description: string;
 }
+
+export interface Testimonial {
+  id: string;
+  author: string;
+  role: string;
+  company: string;
+  trade: TradeType;
+  location: string;
+  fleet: string;
+  rating: number;
+  recoveredStats: {
+    highlight: string;
+    label: string;
+  };
+  beforeAfter: {
+    before: string;
+    after: string;
+  };
+  quote: string;
+  verifiedPlan: string;
+  verifiedDate: string;
+}

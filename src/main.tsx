@@ -4,14 +4,10 @@ import App from './App';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './index.css';
 
-function init() {
-  const rootElement = document.getElementById('root');
-  if (!rootElement) {
-    console.error("Root element '#root' was not found in the document.");
-    return;
-  }
+const rootElement = document.getElementById('root');
 
-  const root = createRoot(rootElement);
+function renderApp(container: HTMLElement) {
+  const root = createRoot(container);
   root.render(
     <StrictMode>
       <ErrorBoundary>
@@ -21,9 +17,16 @@ function init() {
   );
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+if (rootElement) {
+  renderApp(rootElement);
 } else {
-  init();
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('root');
+    if (el) {
+      renderApp(el);
+    } else {
+      console.error("Failed to find '#root' container element.");
+    }
+  });
 }
 
