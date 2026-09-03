@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #17191a;
+    --bg2: #1d201d;
+    --panel: #20231f;
+    --paper: #ece6d6;
+    --paper-dim: #dcd5c0;
+    --ink: #f3efe4;
+    --ink-dim: #9a9d8f;
+    --amber: #e7a335;
+    --amber-deep: #b97a20;
+    --red: #d6553c;
+    --line: rgba(243, 239, 228, 0.13);
+    --line-strong: rgba(243, 239, 228, 0.22);
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-display: 'Barlow Condensed', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--bg);
+    color: var(--ink);
+  }
+}
+
+.font-display {
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+.font-mono-code {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Custom Perforated Paper Ticket Style */
+.ticket-paper {
+  position: relative;
+  background-color: #ece6d6;
+  color: #1b1d18;
+  border-radius: 2px;
+}
+
+.ticket-paper::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: radial-gradient(circle at 11px 8px, #17191a 6px, transparent 6.5px);
+  background-size: 22px 16px;
+  background-repeat: repeat-x;
+  pointer-events: none;
+}
+
+/* Custom Perforated Ticket Style inside light background */
+.ticket-paper-modal::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: radial-gradient(circle at 11px 8px, #101112 6px, transparent 6.5px);
+  background-size: 22px 16px;
+  background-repeat: repeat-x;
+  pointer-events: none;
+}
+

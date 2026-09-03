@@ -1,0 +1,6 @@
+{
+  "name": "ApexRing — Missed Call Recovery for Trades",
+  "description": "Automated text-back and missed-call recovery system for plumbers, HVAC crews, and trade businesses. Stop losing jobs to voicemail.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
