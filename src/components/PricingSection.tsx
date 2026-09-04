@@ -1,32 +1,59 @@
 import React from 'react';
-import { Check, ShieldCheck, ArrowRight, Zap, Award } from 'lucide-react';
+import { Check, ArrowRight, Zap } from 'lucide-react';
+import { motion } from 'motion/react';
+import { PricingSkeleton } from './PricingSkeleton';
+import { AuditBooking } from '../types';
 
 interface PricingSectionProps {
   onSelectPlan: (plan: 'blueprint' | 'core') => void;
+  isLoading?: boolean;
+  registeredBooking?: AuditBooking | null;
 }
 
-export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) => {
+export const PricingSection: React.FC<PricingSectionProps> = ({ 
+  onSelectPlan,
+  isLoading = false,
+  registeredBooking,
+}) => {
+  if (isLoading) {
+    return (
+      <section id="pricing" className="relative scroll-mt-28">
+        <PricingSkeleton />
+      </section>
+    );
+  }
+
   return (
-    <section id="pricing" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A]">
+    <section id="pricing" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A] scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">
-          <div className="font-mono-code text-xs sm:text-sm text-[#E7A335] mb-2 tracking-wide uppercase">
-            THE OFFER
+          <div className="font-mono-code text-xs sm:text-sm text-[#E7A335] mb-2 tracking-wide uppercase flex items-center gap-2">
+            <span>THE OFFER</span>
+            {registeredBooking && (
+              <span className="text-[10px] bg-[#D6553C]/20 text-[#F58F7A] border border-[#D6553C]/40 px-2 py-0.5 rounded-xs">
+                WAITLIST ACTIVE • TICKET #{registeredBooking.id}
+              </span>
+            )}
           </div>
           <h2 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-[#F3EFE4]">
             Two ways in, one way to keep it running
           </h2>
           <p className="text-[#9A9D8F] text-base sm:text-lg mt-3">
-            Most shops start with Core — it&apos;s the setup we handle with you, not one you have to figure
-            out on your own between crawling crawlspaces and service appointments.
+            {registeredBooking
+              ? "We are currently full of clients. You are on the waiting list — reserve your spot today and we will reach out as soon as a slot opens."
+              : "Most shops start with Core — it's the setup we handle with you, not one you have to figure out on your own between crawling crawlspaces and service appointments."}
           </p>
         </div>
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start mb-10">
           {/* Blueprint Ticket */}
-          <div className="ticket-paper p-7 sm:p-9 pt-9 shadow-xl relative flex flex-col justify-between h-full">
+          <motion.div 
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="ticket-paper p-7 sm:p-9 pt-9 shadow-xl relative flex flex-col justify-between h-full"
+          >
             <div>
               <div className="flex justify-between items-center border-b border-[#B9B2A0] border-dashed pb-2.5 mb-5 font-mono-code text-xs text-[#6B6E5F]">
                 <span>BLUEPRINT SPECIFICATION</span>
@@ -85,13 +112,17 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               onClick={() => onSelectPlan('blueprint')}
               className="w-full bg-transparent hover:bg-[#171412] hover:text-[#ECE6D6] text-[#171412] border-2 border-[#171412] font-mono-code font-semibold text-sm py-3 px-5 rounded-xs transition-colors text-center cursor-pointer flex items-center justify-center gap-2"
             >
-              <span>Get the blueprint</span>
+              <span>{registeredBooking ? 'Reserve Blueprint waitlist' : 'Get the blueprint'}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
-          </div>
+          </motion.div>
 
           {/* Core Setup Ticket (Most Booked) */}
-          <div className="ticket-paper p-7 sm:p-9 pt-9 shadow-2xl relative flex flex-col justify-between h-full ring-2 ring-[#E7A335]/70">
+          <motion.div 
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="ticket-paper p-7 sm:p-9 pt-9 shadow-2xl relative flex flex-col justify-between h-full ring-2 ring-[#E7A335]/70"
+          >
             {/* Rubber Stamp */}
             <div className="absolute top-6 right-6 font-mono-code text-xs font-bold text-[#D6553C] border-2 border-[#D6553C] rounded-xs px-2.5 py-1 rotate-6 select-none uppercase tracking-wider bg-[#ECE6D6]">
               MOST BOOKED
@@ -158,10 +189,10 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               onClick={() => onSelectPlan('core')}
               className="w-full bg-[#171412] hover:bg-[#2B2721] text-[#ECE6D6] font-mono-code font-semibold text-sm sm:text-base py-3.5 px-6 rounded-xs transition-colors text-center cursor-pointer flex items-center justify-center gap-2 shadow-lg"
             >
-              <span>Book Core setup</span>
+              <span>{registeredBooking ? 'Reserve Core waitlist' : 'Book Core setup'}</span>
               <ArrowRight className="w-4 h-4 text-[#E7A335]" />
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Retainer Band */}

@@ -15,11 +15,14 @@ import {
   Clock,
   Zap
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { TESTIMONIALS } from '../data/mockData';
 import { TradeType } from '../types';
+import { TestimonialsSkeleton } from './TestimonialsSkeleton';
 
 interface TestimonialsCarouselProps {
   onOpenAuditModal?: (plan?: 'blueprint' | 'core' | 'audit_only') => void;
+  isLoading?: boolean;
 }
 
 const TRADE_FILTERS: Array<{ label: string; value: TradeType | 'ALL' }> = [
@@ -31,13 +34,24 @@ const TRADE_FILTERS: Array<{ label: string; value: TradeType | 'ALL' }> = [
   { label: 'Clinic / Dental', value: 'Dental & Clinic' },
 ];
 
-export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ onOpenAuditModal }) => {
+export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ 
+  onOpenAuditModal,
+  isLoading = false
+}) => {
   const [selectedTrade, setSelectedTrade] = useState<TradeType | 'ALL'>('ALL');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  if (isLoading) {
+    return (
+      <section id="testimonials" className="relative scroll-mt-28">
+        <TestimonialsSkeleton />
+      </section>
+    );
+  }
 
   // Filter items based on selected trade
   const filteredTestimonials = selectedTrade === 'ALL'
@@ -103,7 +117,7 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ onOp
   return (
     <section 
       id="testimonials"
-      className="py-16 sm:py-24 bg-[#17191A] border-t border-b border-[#F3EFE4]/15 relative overflow-hidden"
+      className="py-16 sm:py-24 bg-[#17191A] border-t border-b border-[#F3EFE4]/15 relative overflow-hidden scroll-mt-28"
       aria-label="Contractor Testimonials and Social Proof"
     >
       {/* Background industrial grid subtle accents */}
@@ -118,9 +132,11 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ onOp
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#20231F] border border-[#E7A335]/40 text-[#E7A335] text-xs font-mono mb-4 tracking-wider uppercase">
-            <span className="w-2 h-2 rounded-full bg-[#E7A335] animate-pulse" />
-            Social Proof & Field Dispatch Audits
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#20231F] border border-[#E7A335]/40 text-[#E7A335] text-xs font-mono tracking-wider uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#E7A335] animate-pulse" />
+              Social Proof & Field Dispatch Audits
+            </div>
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold uppercase tracking-tight text-[#F3EFE4] mb-4">
@@ -213,127 +229,137 @@ export const TestimonialsCarousel: React.FC<TestimonialsCarouselProps> = ({ onOp
 
         {/* Dynamic Testimonial Carousel Card */}
         <div 
-          className="relative bg-[#20231F] border-2 border-[#F3EFE4]/20 p-6 sm:p-8 lg:p-10 shadow-2xl transition-all"
+          className="relative bg-[#20231F] border-2 border-[#F3EFE4]/20 p-6 sm:p-8 lg:p-10 shadow-2xl transition-all overflow-hidden"
           onMouseEnter={() => setIsPlaying(false)}
           onMouseLeave={() => setIsPlaying(true)}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Top Card Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#F3EFE4]/15">
-            <div className="flex items-center gap-4">
-              {/* Initials badge / Operator Avatar */}
-              <div className="w-12 h-12 bg-[#17191A] border border-[#E7A335]/40 flex items-center justify-center text-[#E7A335] font-display font-bold text-xl uppercase tracking-wider">
-                {current.author.split(' ').map(n => n[0]).join('')}
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg sm:text-xl font-display font-bold text-[#F3EFE4] tracking-wide">
-                    {current.author}
-                  </h3>
-                  <span className="text-xs bg-[#E7A335]/20 text-[#E7A335] border border-[#E7A335]/30 px-2 py-0.5 font-mono uppercase">
-                    {current.trade}
-                  </span>
-                </div>
-                <div className="text-xs text-[#9A9D8F] flex flex-wrap items-center gap-2 mt-0.5">
-                  <span className="text-[#F3EFE4]/90 font-medium">{current.role}</span>
-                  <span>·</span>
-                  <span>{current.company}</span>
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-[#E7A335]" />
-                    {current.location}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Rating and Verification Status */}
-            <div className="flex flex-col sm:items-end gap-1">
-              <div className="flex items-center gap-1" aria-label={`Rating: ${current.rating} out of 5 stars`}>
-                {[...Array(current.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-[#E7A335] fill-[#E7A335]" />
-                ))}
-                <span className="text-xs font-mono font-bold text-[#E7A335] ml-1">5.0</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-[#9A9D8F] font-mono">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#E7A335]" />
-                <span>{current.verifiedPlan}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Card Content */}
-          <div className="py-6 sm:py-8">
-            {/* Big quote icon */}
-            <div className="flex items-start gap-3 mb-6">
-              <Quote className="w-8 h-8 text-[#E7A335] shrink-0 opacity-75 mt-1" />
-              <blockquote className="text-base sm:text-lg lg:text-xl text-[#F3EFE4] leading-relaxed font-body italic">
-                "{current.quote}"
-              </blockquote>
-            </div>
-
-            {/* Before vs After Field Reality Strip */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 p-4 sm:p-5 bg-[#17191A] border border-[#F3EFE4]/10">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-[#D6553C]/20 border border-[#D6553C]/40 flex items-center justify-center text-[#D6553C] font-mono font-bold text-xs shrink-0 mt-0.5">
-                  ✕
-                </div>
-                <div>
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-[#D6553C] font-semibold mb-1">
-                    Before ApexRing
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {/* Top Card Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#F3EFE4]/15">
+                <div className="flex items-center gap-4">
+                  {/* Initials badge / Operator Avatar */}
+                  <div className="w-12 h-12 bg-[#17191A] border border-[#E7A335]/40 flex items-center justify-center text-[#E7A335] font-display font-bold text-xl uppercase tracking-wider">
+                    {current.author.split(' ').map(n => n[0]).join('')}
                   </div>
-                  <div className="text-xs sm:text-sm text-[#9A9D8F] leading-snug">
-                    {current.beforeAfter.before}
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg sm:text-xl font-display font-bold text-[#F3EFE4] tracking-wide">
+                        {current.author}
+                      </h3>
+                      <span className="text-xs bg-[#E7A335]/20 text-[#E7A335] border border-[#E7A335]/30 px-2 py-0.5 font-mono uppercase">
+                        {current.trade}
+                      </span>
+                    </div>
+                    <div className="text-xs text-[#9A9D8F] flex flex-wrap items-center gap-2 mt-0.5">
+                      <span className="text-[#F3EFE4]/90 font-medium">{current.role}</span>
+                      <span>·</span>
+                      <span>{current.company}</span>
+                      <span>·</span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-[#E7A335]" />
+                        {current.location}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating and Verification Status */}
+                <div className="flex flex-col sm:items-end gap-1">
+                  <div className="flex items-center gap-1" aria-label={`Rating: ${current.rating} out of 5 stars`}>
+                    {[...Array(current.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-[#E7A335] fill-[#E7A335]" />
+                    ))}
+                    <span className="text-xs font-mono font-bold text-[#E7A335] ml-1">5.0</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs text-[#9A9D8F] font-mono">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#E7A335]" />
+                    <span>{current.verifiedPlan}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 md:border-l md:border-[#F3EFE4]/15 md:pl-4">
-                <div className="w-6 h-6 rounded-full bg-[#E7A335]/20 border border-[#E7A335]/40 flex items-center justify-center text-[#E7A335] font-mono font-bold text-xs shrink-0 mt-0.5">
-                  ✓
+              {/* Main Card Content */}
+              <div className="py-6 sm:py-8">
+                {/* Big quote icon */}
+                <div className="flex items-start gap-3 mb-6">
+                  <Quote className="w-8 h-8 text-[#E7A335] shrink-0 opacity-75 mt-1" />
+                  <blockquote className="text-base sm:text-lg lg:text-xl text-[#F3EFE4] leading-relaxed font-body italic">
+                    &ldquo;{current.quote}&rdquo;
+                  </blockquote>
                 </div>
-                <div>
-                  <div className="text-[11px] font-mono uppercase tracking-wider text-[#E7A335] font-semibold mb-1">
-                    With 14-Sec Text-Back
-                  </div>
-                  <div className="text-xs sm:text-sm text-[#F3EFE4] leading-snug">
-                    {current.beforeAfter.after}
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Verified Recovery Highlight Callout */}
-            <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#262B25] border border-[#E7A335]/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#17191A] border border-[#E7A335]/40 text-[#E7A335]">
-                  <TrendingUp className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs text-[#9A9D8F] font-mono uppercase tracking-wide">
-                    {current.recoveredStats.label}
+                {/* Before vs After Field Reality Strip */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6 p-4 sm:p-5 bg-[#17191A] border border-[#F3EFE4]/10">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 rounded-full bg-[#D6553C]/20 border border-[#D6553C]/40 flex items-center justify-center text-[#D6553C] font-mono font-bold text-xs shrink-0 mt-0.5">
+                      ✕
+                    </div>
+                    <div>
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-[#D6553C] font-semibold mb-1">
+                        Before ApexRing
+                      </div>
+                      <div className="text-xs sm:text-sm text-[#9A9D8F] leading-snug">
+                        {current.beforeAfter.before}
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xl sm:text-2xl font-display font-bold text-[#E7A335]">
-                    {current.recoveredStats.highlight}
-                  </div>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-4 text-xs font-mono text-[#9A9D8F]">
-                <div className="flex items-center gap-1.5">
-                  <Truck className="w-4 h-4 text-[#F3EFE4]/60" />
-                  <span>{current.fleet}</span>
+                  <div className="flex items-start gap-3 md:border-l md:border-[#F3EFE4]/15 md:pl-4">
+                    <div className="w-6 h-6 rounded-full bg-[#E7A335]/20 border border-[#E7A335]/40 flex items-center justify-center text-[#E7A335] font-mono font-bold text-xs shrink-0 mt-0.5">
+                      ✓
+                    </div>
+                    <div>
+                      <div className="text-[11px] font-mono uppercase tracking-wider text-[#E7A335] font-semibold mb-1">
+                        With 14-Sec Text-Back
+                      </div>
+                      <div className="text-xs sm:text-sm text-[#F3EFE4] leading-snug">
+                        {current.beforeAfter.after}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="hidden sm:flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-[#F3EFE4]/60" />
-                  <span>{current.verifiedDate}</span>
+
+                {/* Verified Recovery Highlight Callout */}
+                <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#262B25] border border-[#E7A335]/30">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-[#17191A] border border-[#E7A335]/40 text-[#E7A335]">
+                      <TrendingUp className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-[#9A9D8F] font-mono uppercase tracking-wide">
+                        {current.recoveredStats.label}
+                      </div>
+                      <div className="text-xl sm:text-2xl font-display font-bold text-[#E7A335]">
+                        {current.recoveredStats.highlight}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-xs font-mono text-[#9A9D8F]">
+                    <div className="flex items-center gap-1.5">
+                      <Truck className="w-4 h-4 text-[#F3EFE4]/60" />
+                      <span>{current.fleet}</span>
+                    </div>
+                    <div className="hidden sm:flex items-center gap-1.5">
+                      <Clock className="w-4 h-4 text-[#F3EFE4]/60" />
+                      <span>{current.verifiedDate}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </AnimatePresence>
 
           {/* Carousel Footer Controls */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[#F3EFE4]/15">

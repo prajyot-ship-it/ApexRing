@@ -3,7 +3,7 @@ import { ShieldAlert, Check } from 'lucide-react';
 
 export const GuaranteeBand: React.FC = () => {
   return (
-    <section id="guarantee" className="bg-[#E7A335] text-[#171412] py-14 sm:py-16">
+    <section id="guarantee" className="bg-[#E7A335] text-[#171412] py-14 sm:py-16 scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center">
           <div className="md:col-span-3 flex items-center gap-4">

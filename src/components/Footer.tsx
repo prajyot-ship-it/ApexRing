@@ -1,7 +1,11 @@
 import React from 'react';
-import { Shield, Mail, Phone, ExternalLink } from 'lucide-react';
+import { Shield, Mail, Phone, ExternalLink, Lock, Database } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenAdmin?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenAdmin }) => {
   return (
     <footer className="py-12 bg-[#121414] text-[#9A9D8F] border-t border-[#F3EFE4]/10 text-xs font-mono-code">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
@@ -23,11 +27,11 @@ export const Footer: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
             <a
-              href="mailto:audit@apexring.com"
+              href="mailto:ai.prajyot@gmail.com"
               className="flex items-center gap-2 text-[#ECE6D6] hover:text-[#E7A335] transition-colors"
             >
               <Mail className="w-4 h-4 text-[#E7A335]" />
-              <span>audit@apexring.com</span>
+              <span>ai.prajyot@gmail.com</span>
             </a>
             <div className="flex items-center gap-2 text-emerald-400">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -37,8 +41,8 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[#6B6E5F]">
-          <div>
-            © {new Date().getFullYear()} ApexRing Systems LLC. All rights reserved. Built for trade contractors.
+          <div className="flex items-center gap-3">
+            <span>© {new Date().getFullYear()} ApexRing Systems LLC. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-6">
             <a href="#problem" className="hover:text-[#ECE6D6] transition-colors">
@@ -62,3 +66,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+

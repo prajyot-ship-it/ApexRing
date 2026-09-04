@@ -1,13 +1,18 @@
 import React from 'react';
 import { PhoneCall, Mail, Clock, ArrowRight } from 'lucide-react';
+import { AuditBooking } from '../types';
 
 interface FinalCtaProps {
   onOpenAuditModal: () => void;
+  registeredBooking?: AuditBooking | null;
 }
 
-export const FinalCta: React.FC<FinalCtaProps> = ({ onOpenAuditModal }) => {
+export const FinalCta: React.FC<FinalCtaProps> = ({ 
+  onOpenAuditModal,
+  registeredBooking,
+}) => {
   return (
-    <section id="book" className="py-24 sm:py-32 bg-[#17191A] text-center border-b border-[#F3EFE4]/10">
+    <section id="book" className="py-24 sm:py-32 bg-[#17191A] text-center border-b border-[#F3EFE4]/10 scroll-mt-28">
       <div className="max-w-4xl mx-auto px-4 sm:px-7">
         <div className="inline-flex items-center gap-2 font-mono-code text-xs sm:text-sm text-[#E7A335] bg-[#E7A335]/10 border border-[#E7A335]/30 px-3 py-1.5 rounded-xs mb-6">
           <Clock className="w-4 h-4" />
@@ -23,21 +28,21 @@ export const FinalCta: React.FC<FinalCtaProps> = ({ onOpenAuditModal }) => {
           exact recoverable revenue — then you decide if Core setup makes financial sense.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
           <button
             id="final-cta-btn"
             onClick={onOpenAuditModal}
             className="w-full sm:w-auto bg-[#E7A335] hover:bg-[#F0B355] text-[#171412] font-mono-code font-semibold text-base px-8 py-4 rounded-xs transition-colors flex items-center justify-center gap-2 shadow-xl cursor-pointer"
           >
-            <span>Book your free call audit</span>
+            <span>{registeredBooking ? `View waitlist ticket (#${registeredBooking.id})` : 'Book your free call audit'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
           <a
-            href="tel:+18005553746"
-            className="font-mono-code text-sm text-[#9A9D8F] hover:text-[#F3EFE4] border border-[#F3EFE4]/20 hover:border-[#F3EFE4]/40 px-6 py-4 rounded-xs transition-colors flex items-center gap-2"
+            href="mailto:ai.prajyot@gmail.com"
+            className="font-mono-code text-sm text-[#ECE6D6] hover:text-[#E7A335] border border-[#F3EFE4]/20 hover:border-[#E7A335]/60 px-6 py-4 rounded-xs transition-colors flex items-center gap-2 bg-[#20231F]/50"
           >
-            <PhoneCall className="w-4 h-4 text-[#E7A335]" />
-            <span>Call audit line: (800) 555-RING</span>
+            <Mail className="w-4 h-4 text-[#E7A335]" />
+            <span>ai.prajyot@gmail.com</span>
           </a>
         </div>
 

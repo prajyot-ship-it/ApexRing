@@ -7,7 +7,7 @@ export const ScenarioSection: React.FC = () => {
   const scenario: WorkedScenario = WORKED_SCENARIOS[selectedScenarioIndex];
 
   return (
-    <section id="scenario" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A]">
+    <section id="scenario" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A] scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         <div className="max-w-2xl mb-12">
           <div className="font-mono-code text-xs sm:text-sm text-[#E7A335] mb-2 tracking-wide uppercase">

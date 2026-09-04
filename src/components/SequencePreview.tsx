@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Smartphone, Clock, CheckCheck, Play, RotateCcw, Wrench, Shield, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface TradeMessageScript {
   tradeName: string;
@@ -74,7 +75,7 @@ export const SequencePreview: React.FC = () => {
   const script = SCRIPTS[activeTrade];
 
   return (
-    <section id="preview" className="py-20 border-b border-[#F3EFE4]/10 bg-[#141617]">
+    <section id="preview" className="py-20 border-b border-[#F3EFE4]/10 bg-[#141617] scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
           <div>
@@ -137,7 +138,7 @@ export const SequencePreview: React.FC = () => {
         {/* The Phone Canvas */}
         <div className="max-w-2xl mx-auto bg-[#1A1C1D] border-2 border-[#F3EFE4]/20 rounded-2xl shadow-2xl p-4 sm:p-6 font-sans relative">
           {/* Top Speaker / Camera Notch */}
-          <div className="flex items-center justify-between border-b border-[#F3EFE4]/10 pb-3 mb-4">
+          <div className="flex flex-wrap items-center justify-between border-b border-[#F3EFE4]/10 pb-3 mb-4 gap-3">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#E7A335] text-[#171412] font-bold text-xs flex items-center justify-center font-mono-code">
                 AR
@@ -153,10 +154,26 @@ export const SequencePreview: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 font-mono-code text-xs">
+              <span className="text-[11px] text-[#9A9D8F] hidden sm:inline">Steps:</span>
+              {[1, 2, 3].map((stepNum) => (
+                <button
+                  key={stepNum}
+                  onClick={() => setStepVisible(stepNum)}
+                  className={`px-2 py-0.5 rounded text-[11px] cursor-pointer transition-colors ${
+                    stepVisible === stepNum
+                      ? 'bg-[#E7A335] text-[#171412] font-bold'
+                      : 'bg-[#242725] text-[#9A9D8F] hover:text-white border border-[#F3EFE4]/15'
+                  }`}
+                  title={`Show up to Touch ${stepNum}`}
+                >
+                  T{stepNum}
+                </button>
+              ))}
+
               <button
                 onClick={() => setStepVisible((prev) => (prev >= 3 ? 1 : prev + 1))}
-                className="text-xs font-mono-code px-2.5 py-1 bg-[#242725] text-[#ECE6D6] hover:bg-[#323633] rounded border border-[#F3EFE4]/15 flex items-center gap-1 cursor-pointer"
+                className="text-xs font-mono-code px-2.5 py-1 bg-[#242725] text-[#ECE6D6] hover:bg-[#323633] rounded border border-[#F3EFE4]/15 flex items-center gap-1 cursor-pointer ml-1"
               >
                 {stepVisible >= 3 ? (
                   <>
@@ -164,7 +181,7 @@ export const SequencePreview: React.FC = () => {
                   </>
                 ) : (
                   <>
-                    <Play className="w-3 h-3 text-[#E7A335]" /> Next Message
+                    <Play className="w-3 h-3 text-[#E7A335]" /> Next
                   </>
                 )}
               </button>
@@ -180,62 +197,93 @@ export const SequencePreview: React.FC = () => {
           </div>
 
           {/* Message Thread */}
-          <div className="space-y-4 py-2 text-sm leading-relaxed">
-            {/* Touch 1: Bot */}
-            <div className="flex flex-col items-start max-w-[88%]">
-              <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
-                ApexRing Bot • {script.touch1Time}
-              </span>
-              <div className="bg-[#242925] border border-[#F3EFE4]/15 text-[#ECE6D6] p-3.5 rounded-2xl rounded-tl-xs shadow">
-                {script.touch1Bot}
-              </div>
-            </div>
-
-            {/* Touch 1: Customer Reply */}
-            <div className="flex flex-col items-end max-w-[88%] ml-auto">
-              <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
-                Caller • 42s later
-              </span>
-              <div className="bg-[#3B4239] text-[#F3EFE4] p-3.5 rounded-2xl rounded-tr-xs shadow">
-                {script.callerReply}
-              </div>
-            </div>
-
-            {/* Touch 2: Qualification (Step 2) */}
-            {stepVisible >= 2 && (
-              <>
-                <div className="flex flex-col items-start max-w-[88%]">
+          <div className="space-y-4 py-2 text-sm leading-relaxed min-h-[320px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTrade}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-4"
+              >
+                {/* Touch 1: Bot */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col items-start max-w-[88%]"
+                >
                   <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
-                    ApexRing Bot • {script.touch2Time}
+                    ApexRing Bot • {script.touch1Time}
                   </span>
                   <div className="bg-[#242925] border border-[#F3EFE4]/15 text-[#ECE6D6] p-3.5 rounded-2xl rounded-tl-xs shadow">
-                    {script.touch2Bot}
+                    {script.touch1Bot}
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex flex-col items-end max-w-[88%] ml-auto">
+                {/* Touch 1: Customer Reply */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: 0.1 }}
+                  className="flex flex-col items-end max-w-[88%] ml-auto"
+                >
                   <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
-                    Caller • 1 min later
+                    Caller • 42s later
                   </span>
                   <div className="bg-[#3B4239] text-[#F3EFE4] p-3.5 rounded-2xl rounded-tr-xs shadow">
-                    {script.callerConfirm}
+                    {script.callerReply}
                   </div>
-                </div>
-              </>
-            )}
+                </motion.div>
 
-            {/* Touch 3: Locked in (Step 3) */}
-            {stepVisible >= 3 && (
-              <div className="flex flex-col items-start max-w-[88%]">
-                <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
-                  ApexRing Bot • {script.touch3Time}
-                </span>
-                <div className="bg-[#20271E] border border-emerald-500/30 text-emerald-100 p-3.5 rounded-2xl rounded-tl-xs shadow flex items-start gap-2">
-                  <CheckCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                  <div>{script.touch3Bot}</div>
-                </div>
-              </div>
-            )}
+                {/* Touch 2: Qualification (Step 2) */}
+                {stepVisible >= 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-4"
+                  >
+                    <div className="flex flex-col items-start max-w-[88%]">
+                      <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
+                        ApexRing Bot • {script.touch2Time}
+                      </span>
+                      <div className="bg-[#242925] border border-[#F3EFE4]/15 text-[#ECE6D6] p-3.5 rounded-2xl rounded-tl-xs shadow">
+                        {script.touch2Bot}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end max-w-[88%] ml-auto">
+                      <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
+                        Caller • 1 min later
+                      </span>
+                      <div className="bg-[#3B4239] text-[#F3EFE4] p-3.5 rounded-2xl rounded-tr-xs shadow">
+                        {script.callerConfirm}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Touch 3: Locked in (Step 3) */}
+                {stepVisible >= 3 && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="flex flex-col items-start max-w-[88%]"
+                  >
+                    <span className="text-[10px] font-mono-code text-[#9A9D8F] mb-1">
+                      ApexRing Bot • {script.touch3Time}
+                    </span>
+                    <div className="bg-[#20271E] border border-emerald-500/30 text-emerald-100 p-3.5 rounded-2xl rounded-tl-xs shadow flex items-start gap-2">
+                      <CheckCheck className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <div>{script.touch3Bot}</div>
+                    </div>
+                  </motion.div>
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Bottom status indicator */}

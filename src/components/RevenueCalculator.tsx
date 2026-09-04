@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calculator, ArrowRight, Sparkles, TrendingDown } from 'lucide-react';
 import { TRADE_PRESETS } from '../data/mockData';
 import { CalculatorState, TradeType } from '../types';
+import { logActivity } from '../services/analyticsService';
 
 interface RevenueCalculatorProps {
   initialState?: Partial<CalculatorState>;
@@ -18,6 +19,15 @@ export const RevenueCalculator: React.FC<RevenueCalculatorProps> = ({
   const [bookRate, setBookRate] = useState<number>(initialState?.bookRate ?? 0.30);
   const [timeHorizon, setTimeHorizon] = useState<'monthly' | 'annual'>('monthly');
 
+  useEffect(() => {
+    if (initialState) {
+      if (initialState.jobValue !== undefined) setJobValue(initialState.jobValue);
+      if (initialState.missedCalls !== undefined) setMissedCalls(initialState.missedCalls);
+      if (initialState.tradeType !== undefined) setTradeType(initialState.tradeType);
+      if (initialState.bookRate !== undefined) setBookRate(initialState.bookRate);
+    }
+  }, [initialState?.jobValue, initialState?.missedCalls, initialState?.tradeType, initialState?.bookRate]);
+
   const WEEKS_PER_MONTH = 4.33;
   const monthlyLoss = jobValue * missedCalls * WEEKS_PER_MONTH * bookRate;
   const annualLoss = monthlyLoss * 12;
@@ -28,6 +38,12 @@ export const RevenueCalculator: React.FC<RevenueCalculatorProps> = ({
     setTradeType(preset.type);
     setJobValue(preset.defaultJobValue);
     setMissedCalls(preset.defaultMissedCalls);
+
+    const estLoss = Math.round(preset.defaultJobValue * preset.defaultMissedCalls * WEEKS_PER_MONTH * bookRate);
+    logActivity({
+      type: 'calculator_use',
+      description: `Visitor selected ${preset.label} benchmark: calculated $${estLoss.toLocaleString()}/mo in lost revenue (${preset.defaultMissedCalls} calls/wk @ $${preset.defaultJobValue})`,
+    });
   };
 
   const formatCurrency = (val: number) => {
@@ -35,7 +51,7 @@ export const RevenueCalculator: React.FC<RevenueCalculatorProps> = ({
   };
 
   return (
-    <div id="calculator" className="ticket-paper p-6 sm:p-8 pt-8 sm:pt-9 shadow-2xl relative">
+    <div id="calculator" className="ticket-paper p-6 sm:p-8 pt-8 sm:pt-9 shadow-2xl relative scroll-mt-28">
       {/* Ticket Header */}
       <div className="flex flex-wrap items-center justify-between border-b border-[#B9B2A0] border-dashed pb-3 mb-5 text-xs font-mono-code text-[#6B6E5F]">
         <div className="flex items-center gap-2">
@@ -202,7 +218,7 @@ export const RevenueCalculator: React.FC<RevenueCalculatorProps> = ({
           className="mt-4 w-full bg-[#171412] hover:bg-[#2B2721] text-[#ECE6D6] font-mono-code text-xs sm:text-sm font-semibold py-3 px-4 rounded-xs transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-md group"
         >
           <Sparkles className="w-4 h-4 text-[#E7A335]" />
-          <span>Audit my line with these figures</span>
+          <span>Join waiting list with these numbers</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
       </div>

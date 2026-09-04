@@ -7,6 +7,16 @@ export type TradeType =
   | 'Dental & Clinic'
   | 'Other Trade';
 
+export type PlanType = 'blueprint' | 'core' | 'audit_only';
+
+export type ClientStatus = 
+  | 'new'
+  | 'contacted'
+  | 'audit_scheduled'
+  | 'onboarding'
+  | 'completed'
+  | 'cancelled';
+
 export interface TradePreset {
   type: TradeType;
   defaultJobValue: number;
@@ -31,8 +41,17 @@ export interface AuditBooking {
   avgJobValue: number;
   missedCallsWeekly: number;
   preferredTime: string;
+  scheduledDate?: string;
+  scheduledTimeSlot?: string;
   notes?: string;
-  planInterest?: 'blueprint' | 'core' | 'audit_only';
+  planInterest?: PlanType;
+  planName?: string;
+  planPrice?: string;
+  status?: ClientStatus;
+  tags?: string[];
+  estMonthlyLoss?: number;
+  notificationDispatched?: boolean;
+  notificationTarget?: string;
   createdAt: string;
 }
 
@@ -74,3 +93,54 @@ export interface Testimonial {
   verifiedPlan: string;
   verifiedDate: string;
 }
+
+export type UserRole = 'admin' | 'client' | 'visitor';
+
+export interface UserAccount {
+  id: string;
+  email: string;
+  fullName: string;
+  companyName?: string;
+  role: UserRole;
+  tradeType?: TradeType;
+  phone?: string;
+  ticketId?: string;
+  planInterest?: PlanType;
+  createdAt: string;
+  lastLoginAt: string;
+  loginCount: number;
+}
+
+export interface ActivityLog {
+  id: string;
+  type: 'visit' | 'login' | 'signup' | 'calculator_use' | 'plan_click' | 'booking_submitted' | 'admin_action';
+  description: string;
+  userName?: string;
+  userRole?: UserRole;
+  timestamp: string;
+  ipLocation?: string;
+  device?: string;
+}
+
+export interface TrafficSource {
+  source: string;
+  visitors: number;
+  percentage: number;
+  color: string;
+}
+
+export interface VisitorAnalytics {
+  totalPageViews: number;
+  uniqueVisitors: number;
+  totalLogins: number;
+  registeredUsersCount: number;
+  activeSessionsNow: number;
+  calculatorEngagements: number;
+  conversionRate: number; // percentage
+  trafficSources: TrafficSource[];
+  recentActivity: ActivityLog[];
+  dailyVisits: { date: string; visitors: number; logins: number; signups: number }[];
+  deviceBreakdown: { device: string; count: number; percentage: number }[];
+  geoBreakdown: { region: string; visitors: number }[];
+}
+

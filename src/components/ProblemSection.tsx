@@ -3,7 +3,7 @@ import { PhoneMissed, PhoneForwarded, MessageSquare, AlertTriangle, CheckCircle 
 
 export const ProblemSection: React.FC = () => {
   return (
-    <section id="problem" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A]">
+    <section id="problem" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A] scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         {/* Section Header */}
         <div className="max-w-2xl mb-14">

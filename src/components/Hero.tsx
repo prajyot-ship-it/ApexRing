@@ -1,23 +1,33 @@
 import React from 'react';
 import { PhoneMissed, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import { RevenueCalculator } from './RevenueCalculator';
-import { CalculatorState } from '../types';
+import { CalculatorState, AuditBooking } from '../types';
 
 interface HeroProps {
   onOpenAuditModal: (plan?: 'blueprint' | 'core' | 'audit_only') => void;
   onClaimAuditWithState: (state: CalculatorState) => void;
+  registeredBooking?: AuditBooking | null;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onOpenAuditModal,
   onClaimAuditWithState,
+  registeredBooking,
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="pt-10 sm:pt-14 pb-16 sm:pb-24 border-b border-[#F3EFE4]/10 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left Column: Value Proposition */}
-          <div className="lg:col-span-6 flex flex-col justify-center">
+          <motion.div 
+            className="lg:col-span-6 flex flex-col justify-center"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
             {/* Status callout badge */}
             <div className="inline-flex items-center gap-2.5 font-mono-code text-xs sm:text-sm text-[#D6553C] bg-[#D6553C]/10 border border-[#D6553C]/35 px-3 py-1.5 rounded-xs w-fit mb-6">
               <span className="w-2 h-2 rounded-full bg-[#D6553C] animate-ping" />
@@ -45,7 +55,7 @@ export const Hero: React.FC<HeroProps> = ({
                 onClick={() => onOpenAuditModal('core')}
                 className="bg-[#E7A335] hover:bg-[#F0B355] text-[#171412] font-mono-code font-semibold text-sm sm:text-base px-6 sm:px-7 py-3.5 rounded-xs transition-all flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-amber-500/10"
               >
-                <span>Book a free call audit</span>
+                <span>{registeredBooking ? `View waitlist ticket (#${registeredBooking.id})` : 'Book a free call audit'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -76,12 +86,17 @@ export const Hero: React.FC<HeroProps> = ({
                 <span>No long-term contracts or lock-in</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Column: Interactive Worksheet Ticket */}
-          <div className="lg:col-span-6 w-full">
+          <motion.div 
+            className="lg:col-span-6 w-full"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          >
             <RevenueCalculator onClaimAudit={onClaimAuditWithState} />
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

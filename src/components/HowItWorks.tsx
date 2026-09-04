@@ -1,7 +1,10 @@
 import React from 'react';
 import { Search, Terminal, FileSpreadsheet, Trophy } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 
 export const HowItWorks: React.FC = () => {
+  const shouldReduceMotion = useReducedMotion();
+
   const steps = [
     {
       num: '01',
@@ -34,7 +37,7 @@ export const HowItWorks: React.FC = () => {
   ];
 
   return (
-    <section id="how" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A]">
+    <section id="how" className="py-20 sm:py-24 border-b border-[#F3EFE4]/10 bg-[#17191A] scroll-mt-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-7">
         <div className="max-w-xl mb-14">
           <div className="font-mono-code text-xs sm:text-sm text-[#E7A335] mb-2 tracking-wide uppercase">
@@ -49,10 +52,21 @@ export const HowItWorks: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#F3EFE4]/15 border border-[#F3EFE4]/15">
-          {steps.map((step) => {
+          {steps.map((step, idx) => {
             const Icon = step.icon;
             return (
-              <div key={step.num} className="bg-[#17191A] p-7 flex flex-col justify-between group hover:bg-[#1C1F1D] transition-colors">
+              <motion.div 
+                key={step.num}
+                className="bg-[#17191A] p-7 flex flex-col justify-between group hover:bg-[#1C1F1D] transition-colors"
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: shouldReduceMotion ? 0 : idx * 0.1,
+                  ease: [0.22, 1, 0.36, 1] 
+                }}
+              >
                 <div>
                   <div className="flex items-center justify-between mb-5">
                     <span className="font-mono-code font-bold text-lg text-[#E7A335]">
@@ -70,7 +84,7 @@ export const HowItWorks: React.FC = () => {
                     {step.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
